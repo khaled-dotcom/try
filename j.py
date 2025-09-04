@@ -1,9 +1,9 @@
 import streamlit as st
 from groq import Groq
 import os
-import os
-os.environ["GROQ_API_KEY"] = "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"
 
+# Use environment variable for security
+os.environ["GROQ_API_KEY"] = "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"
 
 # =====================
 # 1. Laptop data
@@ -57,9 +57,9 @@ client = Groq(api_key=os.getenv("GROQ_API_KEY"))
 # =====================
 # 3. Streamlit UI
 # =====================
-st.set_page_config(page_title="khaled Laptop t", page_icon="💻", layout="centered")
-st.title("khaled Laptop Recommendation Chatbot")
-st.write("Ask me anything about laptops!")
+st.set_page_config(page_title="Laptop Chatbot", page_icon="💻", layout="centered")
+st.title("💻 Laptop Recommendation Chatbot")
+st.write("Ask me anything about laptops from our store!")
 
 # Store chat messages
 if "messages" not in st.session_state:
@@ -72,16 +72,23 @@ for msg in st.session_state.messages:
 
 # User input
 if prompt := st.chat_input("Type your message..."):
-    # Add user message
     st.session_state.messages.append({"role": "user", "content": prompt})
     with st.chat_message("user"):
         st.markdown(prompt)
 
-    # Query Groq API
+    # Query Groq API with STRICT rules
     completion = client.chat.completions.create(
         model="llama-3.1-8b-instant",
         messages=[
-            {"role": "system", "content": f"You are a chatbot specializing in laptop recommendations. Use this laptop data:\n{laptop_data_str}"},
+            {
+                "role": "system",
+                "content": (
+                    f"You are a strict laptop store assistant. Only answer questions "
+                    f"that are about the laptops in the store based on this data:\n{laptop_data_str}\n"
+                    f"If a user asks about anything else (not related to these laptops), politely respond: "
+                    f'\"Sorry, I can only help with laptops in our store.\"'
+                ),
+            },
             *[
                 {"role": m["role"], "content": m["content"]}
                 for m in st.session_state.messages
@@ -90,7 +97,8 @@ if prompt := st.chat_input("Type your message..."):
     )
     response = completion.choices[0].message.content
 
-    # Add bot response
+    # Add assistant message
     st.session_state.messages.append({"role": "assistant", "content": response})
     with st.chat_message("assistant"):
         st.markdown(response)
+
