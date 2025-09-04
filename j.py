@@ -57,7 +57,7 @@ client = Groq(api_key=os.getenv("GROQ_API_KEY"))
 # =====================
 # 3. Streamlit UI
 # =====================
-st.set_page_config(page_title="Laptop Chatbot", page_icon="💻", layout="centered")
+st.set_page_config(page_title="khaled Laptop t", page_icon="💻", layout="centered")
 st.title("💻 Laptop Recommendation Chatbot")
 st.write("Ask me anything about laptops!")
 
