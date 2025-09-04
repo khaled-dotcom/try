@@ -1,6 +1,9 @@
 import streamlit as st
 from groq import Groq
 import os
+import os
+os.environ["GROQ_API_KEY"] = "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"
+
 
 # =====================
 # 1. Laptop data
